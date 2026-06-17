@@ -10,10 +10,10 @@
 
 | Ref | Decision | Recommendation | Status |
 |-----|----------|----------------|--------|
-| 0-A | **Publisher name** — "blueAPACHE" reads as a business entity (Policy 10.14). Individual account requires personal name. | Publish as "Brendon Davis"; list blueAPACHE as "Developed by" credit. | PENDING |
-| 0-B | **Azure AD App Registration** — `M365_CLIENT_ID` and `M365_TENANT_ID` are placeholder strings. M365 sync non-functional in Store build until real GUIDs are set. | Register free multi-tenant Azure AD app; use Client ID + `'common'` tenant. | PENDING |
-| 0-C | **Privacy policy URL** — Partner Center requires a hosted URL, not a local file. | Host `docs/privacy-policy.html` via GitHub Pages on this repo. | PENDING |
-| 0-D | **Packaging path** — EXE direct-link requires EV code-signing cert (~$200–400/yr). MSIX path uses Microsoft Store signing (no cert cost). | Use MSIX Packaging Tool to wrap the PyInstaller exe. | PENDING |
+| 0-A | **Publisher name** — "blueAPACHE" reads as a business entity (Policy 10.14). Individual account requires personal name. | Publish as "Brendon Davis"; list blueAPACHE as "Developed by" credit. | **RESOLVED: Brendon Davis** |
+| 0-B | **Azure AD App Registration** — `M365_CLIENT_ID` and `M365_TENANT_ID` are placeholder strings. M365 sync non-functional in Store build until real GUIDs are set. | Register free multi-tenant Azure AD app; use Client ID + `'common'` tenant. | **RESOLVED: Developer registering multi-tenant app from dev tenant — awaiting GUIDs** |
+| 0-C | **Privacy policy URL** — Partner Center requires a hosted URL, not a local file. | Host `docs/privacy-policy.html` via GitHub Pages on this repo. | **RESOLVED: GitHub Pages on this repo. URL: `https://bABrendonDavis.github.io/kaBluey-time-tracker/privacy-policy.html`** |
+| 0-D | **Packaging path** — EXE direct-link requires EV code-signing cert (~$200–400/yr). MSIX path uses Microsoft Store signing (no cert cost). | Use MSIX Packaging Tool to wrap the PyInstaller exe. | **RESOLVED: MSIX** |
 
 ---
 
