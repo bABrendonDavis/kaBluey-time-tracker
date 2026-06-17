@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kaBluey — Privacy Policy</title>
+<style>
+  body { font-family: sans-serif; max-width: 820px; margin: 2rem auto; padding: 0 1.5rem; color: #222; line-height: 1.6; }
+  h1 { font-size: 1.6rem; border-bottom: 2px solid #3a6ea5; padding-bottom: 0.4rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; color: #3a6ea5; }
+  .meta { color: #555; font-size: 0.9em; margin-bottom: 1.5rem; }
+  .summary-box { background: #f0f6ff; border-left: 4px solid #3a6ea5; padding: 0.75rem 1rem; margin: 1rem 0; }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.3rem; }
+  a { color: #3a6ea5; }
+  hr { border: none; border-top: 1px solid #ddd; margin: 2rem 0; }
+</style>
+</head>
+<body>
+
+<h1>kaBluey — Privacy Policy</h1>
+<p class="meta">
+  Publisher: blueAPACHE &nbsp;|&nbsp;
+  Application: kaBluey (time-tracking tray application for Windows) &nbsp;|&nbsp;
+  Last updated: 2026-06-17
+</p>
+
+<div class="summary-box">
+  <strong>Summary:</strong> kaBluey is a local-first time-tracking tool. All data you enter is stored
+  only on your own device. kaBluey has no servers, collects no analytics or telemetry, shows no ads,
+  and does not sell or share your data. The only external connection it makes is to Microsoft Graph
+  (Outlook / Microsoft 365), and only when you explicitly enable and sign in to that feature.
+</div>
+
+<h2>1. Information collected and stored locally</h2>
+<p>The following is stored only in local files on your device (by default in your
+<code>Documents\kaBluey</code> folder) and is never transmitted anywhere by kaBluey itself:</p>
+<ul>
+  <li><strong>Email address and role type</strong> — entered once in Settings; used to label your
+    time entries and, if you enable Microsoft 365 sync, to identify which Microsoft account to
+    authenticate as.</li>
+  <li><strong>Time log entries</strong> — start/stop times, job or ticket names, labour-type
+    category, and free-text notes for each tracked time block.</li>
+  <li><strong>Job and task lists</strong> — names of jobs and tickets you have worked on, including
+    any imported from Outlook Tasks if you enable that feature.</li>
+  <li><strong>Application settings</strong> — your configured schedule, sound, calendar, and sync
+    preferences (stored in <code>kabluey.ini</code>).</li>
+  <li><strong>Window size and position</strong> — saved so the app reopens where you left it.</li>
+</ul>
+<p>This data is never read by, or transmitted to, blueAPACHE or any other party. Every one of these
+files is plain text and can be inspected, edited, backed up, or deleted by you at any time.</p>
+
+<h2>2. Microsoft 365 / Outlook integration (optional)</h2>
+<p>kaBluey can optionally sync with your Microsoft 365 mailbox using the Microsoft Graph API.
+This feature is off until you turn it on and sign in. It uses the following OAuth permissions,
+requested only when the corresponding feature is enabled:</p>
+<ul>
+  <li><strong>Calendars.ReadWrite</strong> — to create calendar events from your time entries, and
+    (if you enable the calendar preview feature) to read your calendar so you can tick events into
+    your time log.</li>
+  <li><strong>Tasks.ReadWrite</strong> — requested only if you enable Outlook Tasks sync — to read
+    and create tasks tagged with your configured category.</li>
+</ul>
+<p>Authentication uses Microsoft's standard device-code sign-in flow. Your Microsoft 365 credentials
+are never seen, stored, or processed by kaBluey — only Microsoft's own sign-in page handles your
+password. The resulting access token is cached locally using your operating system's secure
+credential store (Windows Credential Manager) so you do not need to sign in every time.</p>
+<p>All calendar events and tasks created by this sync are created directly in your own mailbox,
+under your own organisation's Microsoft 365 tenant. blueAPACHE has no server in this flow and
+never receives a copy of your calendar, tasks, or any other mailbox content.</p>
+<p>To disconnect kaBluey from Microsoft 365, open Windows Credential Manager, find the entry
+named <code>kaBluey-m365</code>, and delete it. You can also revoke access entirely from
+<a href="https://myapps.microsoft.com" target="_blank" rel="noopener">myapps.microsoft.com</a> →
+My Apps → kaBluey → Remove access.</p>
+
+<h2>3. Data we do not collect</h2>
+<p>kaBluey does not collect or transmit:</p>
+<ul>
+  <li>Usage analytics, telemetry, or crash reports</li>
+  <li>Advertising identifiers, or any data for advertising purposes</li>
+  <li>Location data</li>
+  <li>Contacts, photos, or files outside its own data folder</li>
+  <li>Any data to blueAPACHE's own servers — blueAPACHE does not operate any server that kaBluey
+    communicates with</li>
+</ul>
+
+<h2>4. Data retention and deletion</h2>
+<ul>
+  <li>Daily log files are kept locally for a configurable retention period (default 14 days) and
+    deleted automatically after that period.</li>
+  <li>Uninstalling kaBluey removes the application but does not automatically delete your personal
+    data. To remove all data, delete the <code>Documents\kaBluey</code> folder manually after
+    uninstalling.</li>
+  <li>Disconnecting Microsoft 365 sync (or revoking access at
+    <a href="https://myapps.microsoft.com" target="_blank" rel="noopener">myapps.microsoft.com</a>)
+    removes kaBluey's ability to access your mailbox. Any events or tasks already created remain in
+    your mailbox under your organisation's normal retention rules, the same as anything else
+    created in Outlook.</li>
+</ul>
+
+<h2>5. Device security checks (Full mode)</h2>
+<p>On enterprise-managed devices, kaBluey performs a local check of your device's security posture
+(Entra ID join status on Windows, via <code>dsregcmd</code>) to decide whether to enable
+additional features ("Full mode"). These checks run entirely on your device, read only local system
+state, and are never transmitted anywhere.</p>
+
+<h2>6. Children's privacy</h2>
+<p>kaBluey is a workplace productivity tool intended for adult employees and is not directed at, or
+knowingly used by, children under 13.</p>
+
+<h2>7. Open source</h2>
+<p>kaBluey's source code is publicly available for review at
+<a href="https://github.com/bABrendonDavis/kaBluey" target="_blank" rel="noopener">
+  github.com/bABrendonDavis/kaBluey</a>.
+You or your organisation's IT or security team are welcome to audit the source to verify the
+practices described in this policy.</p>
+
+<h2>8. Changes to this policy</h2>
+<p>If this policy changes, the updated version will be published at this URL and noted in the
+project's changelog, with the "Last updated" date above revised accordingly.</p>
+
+<h2>9. Contact</h2>
+<p>For privacy questions or to report a concern, please open an issue at:<br>
+<a href="https://github.com/bABrendonDavis/kaBluey/issues" target="_blank" rel="noopener">
+  github.com/bABrendonDavis/kaBluey/issues</a></p>
+<p>For security-related reports, see
+<a href="https://github.com/bABrendonDavis/kaBluey/blob/main/SECURITY.md" target="_blank" rel="noopener">
+  SECURITY.md</a> for the private disclosure process.</p>
+
+<hr>
+<p style="font-size:0.85em; color:#777;">
+  This policy is hosted at
+  <a href="https://bABrendonDavis.github.io/kaBluey-time-tracker/privacy-policy.html" target="_blank" rel="noopener">
+    bABrendonDavis.github.io/kaBluey-time-tracker/privacy-policy.html</a>
+  and satisfies the Microsoft Store Policy 10.5.1 requirement for a privacy policy URL.
+</p>
+
+</body>
+</html>
