@@ -16,6 +16,14 @@ Run `kaBluey.exe --help` for a summary. The flags below are supported:
 | `--mode pre_release` | Pre-release mode — writes a dated marker as line 1 of every data file. |
 | `--mode uat` | UAT mode — same as pre_release, plus loads a separate INI file via `uat_ini_path`. |
 
+### Hidden CLI flags (not shown in --help)
+
+These flags are for development and integration testing. They are not documented in the in-app help.
+
+| Flag | Description |
+|------|-------------|
+| `--simple` | Simple/compatibility mode — disables MSIX-specific path resolution and uses the executable directory for all asset lookups. Useful when running the onedir build outside an MSIX container. |
+
 ---
 
 ## [settings] section

@@ -1,0 +1,22 @@
+# Compiled / packaged output — source code stays in the private kaBluey repo
+*.exe
+*.msix
+*.appx
+*.appxbundle
+*.zip
+*.whl
+
+# Python source and build artefacts
+*.py
+*.pyc
+*.pyd
+__pycache__/
+*.spec
+build/
+dist/
+
+# IDE and OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
