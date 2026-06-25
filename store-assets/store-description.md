@@ -49,7 +49,8 @@ time-log entries. Outlook Tasks sync is also available for keeping your job list
 - Calendar preview — tick today's Outlook events into your time log
 - 9 configurable work-type categories
 - Private entries — marked sensitive in Outlook so only you can see them
-- Dark mode support
+- Multi-line notes — add detailed notes to any time entry
+- Dark mode — full light and dark theme support
 - Local-first — all data stored on your device in plain-text files
 
 **Privacy**
@@ -78,18 +79,20 @@ manually if you want to remove all data.
 
 ## Notes for certification (Partner Center field)
 
-> kaBluey works fully without a Microsoft 365 login. To test the app:
+> kaBluey v0.7.1 Build 32 — works fully without a Microsoft 365 login. To test the app:
 >
-> 1. Launch the app. The Settings dialog will open automatically on first run.
+> 1. Launch the app. The Settings dialog opens automatically on first run.
 > 2. Enter any email address and a role/job title in the User tab, then click Save.
-> 3. The main editor and tray icon will appear. The prompt will fire at the configured interval.
-> 4. All core features (time logging, editing, weekly report) work without an M365 account.
+> 3. The main editor and tray icon appear. The prompt fires at the configured interval.
+> 4. All core features (time logging, editing, weekly report, multi-line notes) work without M365.
 >
 > Microsoft 365 sync (calendar and Tasks) is optional and off by default. To test it, sign in with
 > any personal Microsoft account when prompted during the first sync attempt.
 >
-> The app runs in "Lite mode" on non-Entra-joined devices, which is the default for personal
-> machines. All consumer-facing features are available in Lite mode.
+> The app runs in "Lite mode" on non-Entra-joined devices (default for personal machines).
+> All consumer-facing features are available in Lite mode.
+>
+> To disconnect from Microsoft 365: Settings → Microsoft 365 tab → Disconnect.
 
 ---
 
