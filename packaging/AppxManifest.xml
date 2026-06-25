@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  kaBluey MSIX Package Manifest
+  Version: 0.7.2.42
+  Publisher: CN=Brendon Davis  ← TEST VALUE for local WACK only
+             Update to the exact CN= string from Partner Center before Store submission.
+
+  Capabilities:
+    - internetClient: required for MSAL / Microsoft 365 authentication
+    - documentsLibrary: NOT declared here; test first whether MSIX VFS redirection
+      handles Documents\kaBluey\ writes without it (1-G from store-compliance audit).
+      Add if VFS does not satisfy the app's data-folder requirement.
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap desktop rescap">
+
+  <Identity
+    Name="BrendonDavis.kaBluey"
+    Publisher="CN=Brendon Davis"
+    Version="0.7.2.42"
+    ProcessorArchitecture="x64" />
+
+  <Properties>
+    <DisplayName>kaBluey</DisplayName>
+    <PublisherDisplayName>Brendon Davis</PublisherDisplayName>
+    <Description>A lightweight time-tracking tray app for Windows professionals.</Description>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+
+  <Dependencies>
+    <TargetDeviceFamily
+      Name="Windows.Desktop"
+      MinVersion="10.0.17763.0"
+      MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-AU" />
+  </Resources>
+
+  <Applications>
+    <Application
+      Id="kaBluey"
+      Executable="kaBluey.exe"
+      EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements
+        DisplayName="kaBluey"
+        Description="Personal time tracker — log your workday with a single click."
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        BackgroundColor="transparent">
+        <uap:DefaultTile
+          Wide310x150Logo="Assets\Wide310x150Logo.png"
+          ShortName="kaBluey" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+      </uap:VisualElements>
+      <Extensions>
+        <desktop:Extension Category="windows.startupTask" Executable="kaBluey.exe"
+          EntryPoint="Windows.FullTrustApplication">
+          <desktop:StartupTask TaskId="kaBlueyStartupTask" Enabled="false"
+            DisplayName="kaBluey time tracker" />
+        </desktop:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <Capability Name="internetClient" />
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+
+</Package>

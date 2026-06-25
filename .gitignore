@@ -15,6 +15,14 @@ __pycache__/
 build/
 dist/
 
+# Packaging temp files and secrets
+packaging/PackageLayout/
+packaging/*.pfx
+packaging/*.msix
+
+# Allow release-ready MSIX artifacts committed to releases/
+!releases/**/*.msix
+
 # IDE and OS
 .vscode/
 .idea/
