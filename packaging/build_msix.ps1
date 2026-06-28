@@ -97,7 +97,16 @@ Write-Host "  Copying onedir bundle..."
 robocopy $DistOnedir $Layout /E /NP /NFL /NDL /NJH /NJS | Out-Null
 
 # Manifest + assets
-Copy-Item (Join-Path $ScriptDir 'AppxManifest.xml') $Layout
+# Copy manifest then rewrite the Version attribute to Store-compliant {Version}.0 format.
+# Microsoft Store requires the 4th component (revision) to be 0.
+# The source AppxManifest.xml may carry any version string; the build always enforces X.Y.Z.0.
+$LayoutManifest = Join-Path $Layout 'AppxManifest.xml'
+Copy-Item (Join-Path $ScriptDir 'AppxManifest.xml') $LayoutManifest
+$StoreVersion   = "$Version.0"
+$ManifestXml    = Get-Content $LayoutManifest -Raw
+$ManifestXml    = $ManifestXml -replace '(?<=<Identity[^>]*\sVersion=")[^"]*(?=")', $StoreVersion
+Set-Content $LayoutManifest $ManifestXml -Encoding UTF8NoBOM
+Write-Host "  Manifest version set to $StoreVersion (Store revision-zero requirement)"
 Copy-Item (Join-Path $ScriptDir 'Assets') (Join-Path $Layout 'Assets') -Recurse
 
 # NOTICES.txt
