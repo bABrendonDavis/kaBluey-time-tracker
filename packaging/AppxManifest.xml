@@ -2,8 +2,8 @@
 <!--
   kaBluey MSIX Package Manifest
   Version: 0.7.2.0  (Store requires revision = 0; build number tracked in CHANGELOG)
-  Publisher: CN=Brendon Davis  ← TEST VALUE for local WACK only
-             Update to the exact CN= string from Partner Center before Store submission.
+  Publisher: CN=5CF4127A-A18A-4763-908E-1A59A64DC58D  ← Partner Center publisher identity
+             Confirmed from Store submission rejection 2026-06-29.
 
   Capabilities:
     - internetClient: required for MSAL / Microsoft 365 authentication
@@ -20,7 +20,7 @@
 
   <Identity
     Name="BrendonDavis.kaBluey"
-    Publisher="CN=Brendon Davis"
+    Publisher="CN=5CF4127A-A18A-4763-908E-1A59A64DC58D"
     Version="0.7.2.0"
     ProcessorArchitecture="x64" />
 

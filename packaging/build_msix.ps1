@@ -1,4 +1,4 @@
-#Requires -Version 5.1
+﻿#Requires -Version 5.1
 <#
 .SYNOPSIS
     Build, sign, and output the kaBluey MSIX package for WACK / Store submission.
@@ -37,6 +37,75 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+# UTF8NoBOM is only a valid -Encoding literal on PowerShell 6+; on 5.1 (the
+# version this script targets) it throws. Write via .NET directly so behaviour
+# is identical (no BOM) on every PowerShell version.
+function Set-ContentUtf8NoBom([string]$Path, [string]$Content) {
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($Path, $Content, $utf8NoBom)
+}
+
+# GUI password popup so this script can be driven from a non-interactive
+# console (e.g. launched by an agent/automation) without blocking on stdin:
+# Read-Host would hang forever if nothing is attached to the console's input.
+# A WinForms dialog runs in its own window regardless of how the process was
+# started, mirroring the gpg-agent pinentry popup used for release signing.
+function Read-PfxPasswordGui([string]$Prompt) {
+    Add-Type -AssemblyName System.Windows.Forms
+    Add-Type -AssemblyName System.Drawing
+
+    $form = New-Object System.Windows.Forms.Form
+    $form.Text = 'kaBluey MSIX Signing'
+    $form.Size = New-Object System.Drawing.Size(420, 160)
+    $form.StartPosition = 'CenterScreen'
+    $form.FormBorderStyle = 'FixedDialog'
+    $form.MaximizeBox = $false
+    $form.MinimizeBox = $false
+    $form.TopMost = $true
+
+    $label = New-Object System.Windows.Forms.Label
+    $label.Text = $Prompt
+    $label.SetBounds(10, 15, 390, 20)
+    $form.Controls.Add($label)
+
+    $textBox = New-Object System.Windows.Forms.TextBox
+    $textBox.SetBounds(10, 40, 380, 24)
+    $textBox.UseSystemPasswordChar = $true
+    $form.Controls.Add($textBox)
+
+    $okButton = New-Object System.Windows.Forms.Button
+    $okButton.Text = 'OK'
+    $okButton.SetBounds(230, 80, 75, 28)
+    $okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+    $form.Controls.Add($okButton)
+    $form.AcceptButton = $okButton
+
+    $cancelButton = New-Object System.Windows.Forms.Button
+    $cancelButton.Text = 'Cancel'
+    $cancelButton.SetBounds(315, 80, 75, 28)
+    $cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
+    $form.Controls.Add($cancelButton)
+    $form.CancelButton = $cancelButton
+
+    $form.Add_Shown({ $textBox.Focus() })
+    $result = $form.ShowDialog()
+
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        throw 'PFX password entry cancelled.'
+    }
+    # Built via .NET directly (not the ConvertTo-SecureString cmdlet) — in this
+    # environment Microsoft.PowerShell.Security fails to autoload, which makes
+    # ConvertTo-SecureString throw before the password is even checked.
+    $secure = New-Object System.Security.SecureString
+    foreach ($ch in $textBox.Text.ToCharArray()) { $secure.AppendChar($ch) }
+    $secure.MakeReadOnly()
+    return $secure
+}
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -105,7 +174,7 @@ Copy-Item (Join-Path $ScriptDir 'AppxManifest.xml') $LayoutManifest
 $StoreVersion   = "$Version.0"
 $ManifestXml    = Get-Content $LayoutManifest -Raw
 $ManifestXml    = $ManifestXml -replace '(?<=<Identity[^>]*\sVersion=")[^"]*(?=")', $StoreVersion
-Set-Content $LayoutManifest $ManifestXml -Encoding UTF8NoBOM
+Set-ContentUtf8NoBom $LayoutManifest $ManifestXml
 Write-Host "  Manifest version set to $StoreVersion (Store revision-zero requirement)"
 Copy-Item (Join-Path $ScriptDir 'Assets') (Join-Path $Layout 'Assets') -Recurse
 
@@ -125,17 +194,17 @@ Write-Host "  Layout complete: $((Get-ChildItem $Layout -Recurse -File).Count) f
 if (-not $SkipCertCreate -or -not (Test-Path $PfxPath)) {
     Write-Host "`n[2/5] Creating self-signed dev certificate..."
     if ($CertPassword -eq '') {
-        $secPwd = Read-Host -Prompt "Enter PFX password for kaBluey-dev.pfx" -AsSecureString
+        $secPwd = Read-PfxPasswordGui "Enter PFX password for kaBluey-dev.pfx"
     } else {
         $secPwd = ConvertTo-SecureString $CertPassword -AsPlainText -Force
     }
 
     # Remove any stale cert from the store
-    Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Subject -eq 'CN=Brendon Davis' -and $_.FriendlyName -eq 'kaBluey Dev Cert' } | Remove-Item -Force -ErrorAction SilentlyContinue
+    Get-ChildItem Cert:\CurrentUser\My | Where-Object { $_.Subject -eq 'CN=5CF4127A-A18A-4763-908E-1A59A64DC58D' -and $_.FriendlyName -eq 'kaBluey Dev Cert' } | Remove-Item -Force -ErrorAction SilentlyContinue
 
     $cert = New-SelfSignedCertificate `
         -Type Custom `
-        -Subject 'CN=Brendon Davis' `
+        -Subject 'CN=5CF4127A-A18A-4763-908E-1A59A64DC58D' `
         -KeyUsage DigitalSignature `
         -FriendlyName 'kaBluey Dev Cert' `
         -CertStoreLocation 'Cert:\CurrentUser\My' `
@@ -152,7 +221,7 @@ if (-not $SkipCertCreate -or -not (Test-Path $PfxPath)) {
 } else {
     Write-Host "`n[2/5] Reusing existing dev certificate: $PfxPath"
     if ($CertPassword -eq '') {
-        $secPwd = Read-Host -Prompt "Enter PFX password" -AsSecureString
+        $secPwd = Read-PfxPasswordGui "Enter PFX password for kaBluey-dev.pfx"
     } else {
         $secPwd = ConvertTo-SecureString $CertPassword -AsPlainText -Force
     }
@@ -188,9 +257,18 @@ New-Item -ItemType Directory -Force $OutputDir | Out-Null
 $destMsix = Join-Path $OutputDir $MsixName
 Copy-Item $MsixOut $destMsix -Force
 
-$hash = (Get-FileHash $destMsix -Algorithm SHA256).Hash.ToLower()
+# Get-FileHash (Microsoft.PowerShell.Utility) also fails to autoload in this
+# environment — compute the SHA256 directly via .NET instead.
+$sha256 = [System.Security.Cryptography.SHA256]::Create()
+$fileStream = [System.IO.File]::OpenRead($destMsix)
+try {
+    $hashBytes = $sha256.ComputeHash($fileStream)
+} finally {
+    $fileStream.Close()
+}
+$hash = ([System.BitConverter]::ToString($hashBytes) -replace '-', '').ToLower()
 $sumsPath = Join-Path $OutputDir 'SHA256SUMS.txt'
-"$hash  $MsixName" | Set-Content $sumsPath -Encoding UTF8NoBOM
+Set-ContentUtf8NoBom $sumsPath "$hash  $MsixName`n"
 Write-Host "  MSIX:       $destMsix"
 Write-Host "  SHA256:     $hash"
 Write-Host "  SHA256SUMS: $sumsPath"
