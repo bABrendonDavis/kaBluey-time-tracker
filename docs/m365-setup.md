@@ -32,8 +32,10 @@ kaBluey uses the **Microsoft device-code flow** (no pop-up browser window):
 4. Return to kaBluey — it detects the completed sign-in automatically.
 
 Your password is never entered into kaBluey.  Only Microsoft's own sign-in pages handle
-your credentials.  The resulting token is stored in **Windows Credential Manager** under the
-entry name `kaBluey-m365`.
+your credentials.  The resulting token is cached locally with per-user OS protection — a
+**DPAPI-encrypted file** (`m365_cache_<email>.bin`) bound to your Windows account on Windows,
+or the **Keychain** on macOS. Enabling **Enhanced security** (Windows) additionally stores the
+file's decryption secret in Windows Credential Manager (`kaBluey-m365-entropy`).
 
 ---
 
@@ -99,10 +101,11 @@ To disconnect kaBluey from Microsoft 365:
 **Within the app:** Settings → Microsoft 365 tab → **Disconnect M365**.
 
 **Manually:**
-- Open **Windows Credential Manager** (search in Start menu).
-- Under *Windows Credentials*, find `kaBluey-m365` and delete it.
-- Also delete any `kaBluey-m365-*.json` files in your `Documents\kaBluey\` folder
-  (these are fallback token cache files, only present if file-based caching is enabled).
+- Delete the token cache from your `Documents\kaBluey\` folder: `m365_cache_<email>.bin`
+  (the encrypted default) and any legacy `m365_cache_<email>.json` (only if file-based caching
+  was enabled).
+- If you used **Enhanced security**, open **Windows Credential Manager** (Start menu) →
+  *Windows Credentials* and remove `kaBluey-m365-entropy`.
 
 **Revoking access from Microsoft's side:**
 - Visit [myapps.microsoft.com](https://myapps.microsoft.com).

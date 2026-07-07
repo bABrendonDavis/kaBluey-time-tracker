@@ -110,7 +110,8 @@ These flags are for development and integration testing. They are not documented
 |-----|---------|-------------|
 | `m365_override_client_id` | *(blank)* | Override the built-in Microsoft 365 Azure AD app Client ID. Enterprise deployments with their own app registration set this. |
 | `m365_override_tenant_id` | *(blank)* | Override the built-in Azure AD Tenant ID. Use your organisation's domain or GUID, or `common` for multi-tenant. |
-| `m365_use_file_token_cache` | `false` | Store M365 auth tokens as a local JSON file instead of Windows Credential Manager. Only enable if the OS credential store is unavailable. |
+| `m365_enhanced_security` | `false` | Windows: also store the token file's DPAPI decryption secret in Windows Credential Manager, so decryption needs both your Windows login and that entry. |
+| `m365_use_file_token_cache` | `false` | Store M365 auth tokens as an **unencrypted** JSON file instead of the secure default (a DPAPI-encrypted file on Windows / the OS keychain on macOS). Only enable if secure storage is unavailable. |
 | `date_override` | *(blank)* | Override the date used for log entries. Format: `DD-MM` (e.g. `03-06` for 3 June). For testing/audit use only. |
 | `root_directory` | *(blank)* | Root directory for all kaBluey data. Overrides all relative path resolution. |
 | `job_list_directory` | *(blank)* | Separate location for the job list file. Blank = same as `data_directory`. |
@@ -167,5 +168,6 @@ Documents\kaBluey\
 └── assets\
     ├── all-kabluey-jobs.csv       # Full job pool (local + Outlook Tasks)
     ├── calendar_YYYY-MM-DD.json   # Cached calendar events (temporary)
-    └── m365_cache_<email>.json    # M365 token cache (only if file cache enabled)
+    ├── m365_cache_<email>.bin     # M365 token cache (DPAPI-encrypted, Windows default)
+    └── m365_cache_<email>.json    # M365 token cache (only if legacy file cache enabled)
 ```

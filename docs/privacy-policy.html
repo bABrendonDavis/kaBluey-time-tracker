@@ -63,13 +63,16 @@ requested only when the corresponding feature is enabled:</p>
 </ul>
 <p>Authentication uses Microsoft's standard device-code sign-in flow. Your Microsoft 365 credentials
 are never seen, stored, or processed by kaBluey — only Microsoft's own sign-in page handles your
-password. The resulting access token is cached locally using your operating system's secure
-credential store (Windows Credential Manager) so you do not need to sign in every time.</p>
+password. The resulting access token is cached locally with per-user operating-system protection so
+you do not need to sign in every time: on Windows it is stored as a DPAPI-encrypted file bound to
+your Windows user account (optionally reinforced with a secret in Windows Credential Manager via the
+"Enhanced security" setting), and on macOS in the system Keychain. The token never leaves your
+device.</p>
 <p>All calendar events and tasks created by this sync are created directly in your own mailbox,
 under your own organisation's Microsoft 365 tenant. The developer has no server in this flow and
 never receives a copy of your calendar, tasks, or any other mailbox content.</p>
-<p>To disconnect kaBluey from Microsoft 365, open Windows Credential Manager, find the entry
-named <code>kaBluey-m365</code>, and delete it. You can also revoke access entirely from
+<p>To disconnect kaBluey from Microsoft 365, delete the encrypted token file from your kaBluey data
+folder (or use Settings → Microsoft 365 → Disconnect). You can also revoke access entirely from
 <a href="https://myapps.microsoft.com" target="_blank" rel="noopener">myapps.microsoft.com</a> →
 My Apps → kaBluey → Remove access.</p>
 
