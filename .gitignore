@@ -20,8 +20,12 @@ packaging/PackageLayout/
 packaging/*.pfx
 packaging/*.msix
 
-# Allow release-ready MSIX artifacts committed to releases/
-!releases/**/*.msix
+# MSIX binaries are published as GitHub Release assets, not committed to the repo.
+# (The previous "!releases/**/*.msix" negation put ~150 MB of packages into history.)
+# Signed manifests (releases/*/SHA256SUMS.txt[.asc]) DO stay tracked for Rule 2 verification.
+
+# Local-only archive of superseded builds — kept on this machine, never pushed
+archive/
 
 # IDE and OS
 .vscode/
