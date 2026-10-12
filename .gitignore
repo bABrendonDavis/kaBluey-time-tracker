@@ -28,3 +28,7 @@ packaging/*.msix
 .idea/
 Thumbs.db
 desktop.ini
+
+# Legacy program versions kept locally only (not replicated)
+/archive/
+/Archive/
