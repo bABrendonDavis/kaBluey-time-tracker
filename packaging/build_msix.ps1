@@ -7,11 +7,17 @@
     Reusable across build iterations. Run from the kaBluey-time-tracker\packaging\
     directory, or pass explicit paths. Update $BUILD to match version.py before each run.
 
+    The public package is assembled from a STAGED copy of the kaBluey onedir bundle: the support
+    links (assets\distribution.json, the help page and NOTICES.txt) are re-pointed from the private
+    repository to the public kaBluey-time-tracker repository (see repoint_support_links.ps1), and
+    the build fails if any private-repository link remains. The kaBluey working tree is never
+    modified.
+
 .PARAMETER Build
-    Build number (default 41). Must match version.py BUILD value.
+    Build number (default 61). Must match version.py BUILD value.
 
 .PARAMETER Version
-    App version string (default 0.7.2). Must match version.py VERSION value.
+    App version string (default 1.0.0). Must match version.py VERSION value.
 
 .PARAMETER CertPassword
     Password for the self-signed dev certificate PFX. If omitted, prompts securely.
@@ -24,12 +30,12 @@
 
 .EXAMPLE
     .\build_msix.ps1
-    .\build_msix.ps1 -Build 42 -Version 0.7.3
+    .\build_msix.ps1 -Build 62 -Version 1.0.0
     .\build_msix.ps1 -SkipCertCreate -CertPassword "mypassword"
 #>
 param(
-    [int]   $Build        = 41,
-    [string]$Version      = '0.7.2',
+    [int]   $Build        = 61,
+    [string]$Version      = '1.0.0',
     [string]$CertPassword = '',
     [switch]$SkipCertCreate,
     [string]$OutputDir    = ''
@@ -41,6 +47,9 @@ $ErrorActionPreference = 'Stop'
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
+# Support-link re-pointing for the public package (staged copy only)
+. (Join-Path $PSScriptRoot 'repoint_support_links.ps1')
 
 # UTF8NoBOM is only a valid -Encoding literal on PowerShell 6+; on 5.1 (the
 # version this script targets) it throws. Write via .NET directly so behaviour
@@ -147,7 +156,7 @@ Write-Host "signtool: $signtool"
 # Validate source dist bundle
 # ---------------------------------------------------------------------------
 if (-not (Test-Path $DistOnedir)) {
-    throw "Onedir bundle not found: $DistOnedir`nRun: pyinstaller kabluey.spec --clean -y"
+    throw "Onedir bundle not found: $DistOnedir`nBuild it from the hash-locked build venv: python build_env.py sync, then <venv python> -m PyInstaller kabluey.spec --clean --noconfirm"
 }
 $exeInBundle = Join-Path $DistOnedir 'kaBluey.exe'
 if (-not (Test-Path $exeInBundle)) {
@@ -185,6 +194,9 @@ if (Test-Path $NoticesFile) {
 } else {
     Write-Warning "NOTICES.txt not found at $NoticesFile — package will not include open-source attribution"
 }
+
+# Public package only: point the support links at the public repository (staged copy)
+Invoke-SupportLinkRepoint -Layout $Layout | Out-Null
 
 Write-Host "  Layout complete: $((Get-ChildItem $Layout -Recurse -File).Count) files"
 

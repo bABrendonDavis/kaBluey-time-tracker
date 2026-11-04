@@ -21,7 +21,7 @@
   <Identity
     Name="BrendonDavis.kaBluey"
     Publisher="CN=5CF4127A-A18A-4763-908E-1A59A64DC58D"
-    Version="0.7.2.0"
+    Version="1.0.0.0"
     ProcessorArchitecture="x64" />
 
   <Properties>
