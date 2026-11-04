@@ -21,15 +21,15 @@
 <h1>kaBluey — Privacy Policy</h1>
 <p class="meta">
   Publisher: Brendon Davis &nbsp;|&nbsp;
-  Application: kaBluey (time-tracking tray application for Windows) &nbsp;|&nbsp;
-  Last updated: 2026-06-17
+  Application: kaBluey (time-tracking tray application for Windows and macOS) &nbsp;|&nbsp;
+  Last updated: 2026-11-05
 </p>
 
 <div class="summary-box">
   <strong>Summary:</strong> kaBluey is a local-first time-tracking tool. All data you enter is stored
   only on your own device. kaBluey has no servers, collects no analytics or telemetry, shows no ads,
-  and does not sell or share your data. The only external connection it makes is to Microsoft Graph
-  (Outlook / Microsoft 365), and only when you explicitly enable and sign in to that feature.
+  and does not sell or share your data. It connects to the internet only for the features listed
+  in section 3, and only when they are in use.
 </div>
 
 <h2>1. Information collected and stored locally</h2>
@@ -76,7 +76,25 @@ folder (or use Settings → Microsoft 365 → Disconnect). You can also revoke a
 <a href="https://myapps.microsoft.com" target="_blank" rel="noopener">myapps.microsoft.com</a> →
 My Apps → kaBluey → Remove access.</p>
 
-<h2>3. Data we do not collect</h2>
+<h2>3. What kaBluey sends over the internet</h2>
+<p>kaBluey connects to the internet only for these features, and only when they are in use:</p>
+<ul>
+  <li><strong>Microsoft 365</strong> (<code>login.microsoftonline.com</code>,
+    <code>graph.microsoft.com</code>) — when you connect and sync.</li>
+  <li><strong>Your organisation's Kablammo server</strong> — Full mode only, when your administrator
+    sets <code>kablammo_fqdn</code> and you connect.</li>
+  <li><strong>GitHub</strong> (<code>api.github.com</code>) — only if you enable the update check
+    (<code>update_check_enabled</code>, off by default) or start kaBluey with
+    <code>--check-updates</code>.</li>
+  <li><strong>kaBluey's labour-type list</strong> (<code>kabluey.blob.core.windows.net</code>) —
+    downloaded after a Microsoft 365 sync when Kablammo is not in use.</li>
+  <li><strong>An INI file URL set by your administrator</strong> (<code>ini_download_url</code>) —
+    at startup, if configured.</li>
+</ul>
+<p>None of these requests send your time logs except to Microsoft 365 or Kablammo. As with any web
+request, the server sees your IP address. There is no telemetry, analytics or advertising.</p>
+
+<h2>4. Data we do not collect</h2>
 <p>kaBluey does not collect or transmit:</p>
 <ul>
   <li>Usage analytics, telemetry, or crash reports</li>
@@ -87,7 +105,7 @@ My Apps → kaBluey → Remove access.</p>
     server operated by its developer</li>
 </ul>
 
-<h2>4. Data retention and deletion</h2>
+<h2>5. Data retention and deletion</h2>
 <ul>
   <li>Daily log files are kept locally for a configurable retention period (default 14 days) and
     deleted automatically after that period.</li>
@@ -101,34 +119,34 @@ My Apps → kaBluey → Remove access.</p>
     created in Outlook.</li>
 </ul>
 
-<h2>5. Device security checks (Full mode)</h2>
+<h2>6. Device security checks (Full mode)</h2>
 <p>On enterprise-managed devices, kaBluey performs a local check of your device's security posture
-(Entra ID join status on Windows, via <code>dsregcmd</code>) to decide whether to enable
+(Entra ID join status on Windows, via <code>dsregcmd</code>; MDM enrolment on macOS) to decide whether to enable
 additional features ("Full mode"). These checks run entirely on your device, read only local system
 state, and are never transmitted anywhere.</p>
 
-<h2>6. Children's privacy</h2>
+<h2>7. Children's privacy</h2>
 <p>kaBluey is a workplace productivity tool intended for adult employees and is not directed at, or
 knowingly used by, children under 13.</p>
 
-<h2>7. Open source</h2>
+<h2>8. Open source</h2>
 <p>kaBluey's source code is publicly available for review at
-<a href="https://github.com/bABrendonDavis/kaBluey" target="_blank" rel="noopener">
-  github.com/bABrendonDavis/kaBluey</a>.
-You or your organisation's IT or security team are welcome to audit the source to verify the
-practices described in this policy.</p>
+<a href="https://github.com/bABrendonDavis/kaBluey-time-tracker" target="_blank" rel="noopener">
+  github.com/bABrendonDavis/kaBluey-time-tracker</a>, where each release and its signed checksums
+are published. You or your organisation's IT or security team are welcome to review the release
+and verify the practices described in this policy.</p>
 
-<h2>8. Changes to this policy</h2>
+<h2>9. Changes to this policy</h2>
 <p>If this policy changes, the updated version will be published at this URL and noted in the
 project's changelog, with the "Last updated" date above revised accordingly.</p>
 
-<h2>9. Contact</h2>
+<h2>10. Contact</h2>
 <p>For privacy questions or to report a concern, please open an issue at:<br>
-<a href="https://github.com/bABrendonDavis/kaBluey/issues" target="_blank" rel="noopener">
-  github.com/bABrendonDavis/kaBluey/issues</a></p>
-<p>For security-related reports, see
-<a href="https://github.com/bABrendonDavis/kaBluey/blob/main/SECURITY.md" target="_blank" rel="noopener">
-  SECURITY.md</a> for the private disclosure process.</p>
+<a href="https://github.com/bABrendonDavis/kaBluey-time-tracker/issues" target="_blank" rel="noopener">
+  github.com/bABrendonDavis/kaBluey-time-tracker/issues</a></p>
+<p>For security-related reports, please do not open a public issue; use the repository's private
+vulnerability reporting (the <a href="https://github.com/bABrendonDavis/kaBluey-time-tracker/security" target="_blank" rel="noopener">Security</a>
+tab → Report a vulnerability).</p>
 
 <hr>
 <p style="font-size:0.85em; color:#777;">

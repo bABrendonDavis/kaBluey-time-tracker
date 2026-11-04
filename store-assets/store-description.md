@@ -120,5 +120,5 @@ Place screenshots at: `store-assets/screenshots/screenshot-01.png` etc.
 
 ## Support contact
 
-- URL: `https://github.com/bABrendonDavis/kaBluey/issues`
+- URL: `https://github.com/bABrendonDavis/kaBluey-time-tracker/issues`
 - Required for company accounts; recommended for individual accounts.
