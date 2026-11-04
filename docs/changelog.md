@@ -9,6 +9,37 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [1.0.0] — Unreleased — Build 61
+
+First general-availability release, for Windows and macOS.
+
+### Changed
+- The system-tray icon and the secure credential storage are now kaBluey's own code, replacing two
+  third-party libraries. Click the tray icon to open the Time Log; right-click for the menu. After
+  an Explorer restart or a slow sign-in the icon comes back on its own. Your existing Microsoft 365
+  and Kablammo sign-ins keep working. On macOS the system may ask once whether the new build may
+  use the existing Keychain items
+- About now shows the build number (`Version 1.0.0 (build 61)`)
+- The Help page was rewritten and checked against the app: the real tray menu and Settings layout,
+  the Interruption button and Unconfirmed entries, where nag mode lives (Mode → Repeat prompts until
+  answered), how to stop and start the timer, every internet destination kaBluey uses, and macOS
+  instructions
+- The privacy policy now lists every network destination: Microsoft 365, your organisation's
+  Kablammo server (Full mode), the opt-in GitHub update check, the labour-type list, and an
+  administrator-set INI URL
+- In the Store / GitHub package, Support & Feedback points at this repository's issue tracker
+- Linux is no longer a (headless) target: kaBluey supports Windows and macOS only
+
+### Fixed
+- Windows time-zone detection for British Columbia, Alberta and Manitoba
+
+### Security
+- Release builds come from a hash-locked build environment, so nothing from the build machine's own
+  Python can end up in the app. The dependency scan now covers every locked package
+- Open-source notices updated, including a full list of bundled runtime components
+
+---
+
 ## [0.8.6] — 2026-07-27 — Build 59
 
 macOS parity pass: automatic Full-mode detection, a working light/dark switch, and
