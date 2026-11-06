@@ -14,7 +14,7 @@
     modified.
 
 .PARAMETER Build
-    Build number (default 61). Must match version.py BUILD value.
+    Build number (default 62). Must match version.py BUILD value.
 
 .PARAMETER Version
     App version string (default 1.0.0). Must match version.py VERSION value.
@@ -34,7 +34,7 @@
     .\build_msix.ps1 -SkipCertCreate -CertPassword "mypassword"
 #>
 param(
-    [int]   $Build        = 61,
+    [int]   $Build        = 62,
     [string]$Version      = '1.0.0',
     [string]$CertPassword = '',
     [switch]$SkipCertCreate,

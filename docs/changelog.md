@@ -9,7 +9,7 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [1.0.0] — Unreleased — Build 61
+## [1.0.0] — Unreleased — Build 62
 
 First general-availability release, for Windows and macOS.
 
@@ -19,7 +19,7 @@ First general-availability release, for Windows and macOS.
   an Explorer restart or a slow sign-in the icon comes back on its own. Your existing Microsoft 365
   and Kablammo sign-ins keep working. On macOS the system may ask once whether the new build may
   use the existing Keychain items
-- About now shows the build number (`Version 1.0.0 (build 61)`)
+- About now shows the build number (`Version 1.0.0 (build 62)`)
 - The Help page was rewritten and checked against the app: the real tray menu and Settings layout,
   the Interruption button and Unconfirmed entries, where nag mode lives (Mode → Repeat prompts until
   answered), how to stop and start the timer, every internet destination kaBluey uses, and macOS
