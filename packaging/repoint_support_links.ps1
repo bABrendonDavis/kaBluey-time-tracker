@@ -11,6 +11,8 @@
 
       1. assets\distribution.json            -> {"channel":"public","support_url":<public issues>}
       2. staged assets\kabluey_help.html and NOTICES.txt:
+           https://github.com/bABrendonDavis/kaBluey/blob/<branch>/SECURITY.md -> <public repo>/issues
+              (the public repository has no SECURITY.md; the issue tracker is the contact page)
            https://github.com/bABrendonDavis/kaBluey/issues   -> <public repo>/issues
            https://github.com/bABrendonDavis/kaBluey           -> <public repo>
          (word-bounded: a following "-" or letter/digit means a different repository name)
@@ -27,9 +29,11 @@ Set-StrictMode -Version Latest
 $script:PublicRepoUrl      = 'https://github.com/bABrendonDavis/kaBluey-time-tracker'
 $script:PublicSupportUrl   = "$($script:PublicRepoUrl)/issues"
 # The private repository, as an exact URL not followed by a name character.
-$script:PrivateRepoUrlPattern = 'https://github\.com/bABrendonDavis/kaBluey(?![A-Za-z0-9_-])'
+# GitHub URLs are case-insensitive, so every pattern is too.
+$script:PrivateSecurityPattern = '(?i)https://github\.com/bABrendonDavis/kaBluey/blob/[^/\s"''<>)]+/SECURITY\.md'
+$script:PrivateRepoUrlPattern = '(?i)https://github\.com/bABrendonDavis/kaBluey(?![A-Za-z0-9_-])'
 # Any reference at all (with or without scheme) - used by the final guard.
-$script:PrivateRepoAnyPattern = 'github\.com/bABrendonDavis/kaBluey(?![A-Za-z0-9_-])'
+$script:PrivateRepoAnyPattern = '(?i)github\.com/bABrendonDavis/kaBluey(?![A-Za-z0-9_-])'
 $script:TextExtensions = @('.html', '.htm', '.txt', '.json', '.md', '.xml', '.ini', '.cfg', '.csv',
                            '.toml', '.yml', '.yaml', '.css', '.js', '.svg', '.manifest', '.rst')
 
@@ -81,15 +85,17 @@ function Invoke-SupportLinkRepoint {
     foreach ($file in $targets) {
         $raw   = Read-TextFileRaw $file.FullName
         $text  = $raw.Text
+        $nSecurity = [regex]::Matches($text, $script:PrivateSecurityPattern).Count
+        $text  = [regex]::Replace($text, $script:PrivateSecurityPattern, $script:PublicSupportUrl)
         $issuesPattern = $script:PrivateRepoUrlPattern + '/issues'
         $nIssues = [regex]::Matches($text, $issuesPattern).Count
         $text  = [regex]::Replace($text, $issuesPattern, "$($script:PublicRepoUrl)/issues")
         $nRepo = [regex]::Matches($text, $script:PrivateRepoUrlPattern).Count
         $text  = [regex]::Replace($text, $script:PrivateRepoUrlPattern, $script:PublicRepoUrl)
-        if ($nIssues + $nRepo -gt 0) {
+        if ($nSecurity + $nIssues + $nRepo -gt 0) {
             Write-TextFileRaw $file.FullName $text $raw.HasBom
         }
-        $summary += "  $($file.Name): $nIssues issues link(s), $nRepo repository link(s) re-pointed"
+        $summary += "  $($file.Name): $nSecurity security link(s), $nIssues issues link(s), $nRepo repository link(s) re-pointed"
     }
 
     # 3. Guard: no staged text file may still mention the private repository.

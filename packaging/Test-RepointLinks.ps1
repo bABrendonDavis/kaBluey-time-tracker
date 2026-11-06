@@ -50,7 +50,8 @@ Assert-True ($dist.Text.Contains("$($script:PublicRepoUrl)/issues")) 'distributi
 $help = Read-TextFileRaw (Join-Path $layout '_internal\assets\kabluey_help.html')
 Assert-True (-not [regex]::IsMatch($help.Text, $script:PrivateRepoAnyPattern)) 'help page has no private-repository link'
 Assert-True ($help.Text.Contains("$($script:PublicRepoUrl)/issues")) 'help page links the public issue tracker'
-Assert-True ($help.Text.Contains("$($script:PublicRepoUrl)/blob/main/SECURITY.md")) 'help page SECURITY.md link re-pointed'
+Assert-True (-not $help.Text.Contains('blob/main/SECURITY.md')) 'help page no longer links a non-existent public SECURITY.md'
+Assert-True ($help.Text.Contains("href=`"$($script:PublicSupportUrl)`"")) 'help page contact links go to the public issue tracker'
 $notices = Read-TextFileRaw (Join-Path $layout 'NOTICES.txt')
 Assert-True (-not [regex]::IsMatch($notices.Text, $script:PrivateRepoAnyPattern)) 'NOTICES.txt has no private-repository link'
 foreach ($f in 'assets\kabluey_help.html', 'assets\distribution.json', 'NOTICES.txt') {
@@ -81,6 +82,18 @@ Assert-True (-not ($n[0] -eq 0xEF -and $n[1] -eq 0xBB)) 'NOTICES.txt stays BOM-l
 Assert-True ($enc.GetString($n).Contains("kaBluey-time-tracker`nb")) 'NOTICES.txt keeps LF and is re-pointed'
 $d = [System.IO.File]::ReadAllBytes((Join-Path $assets 'distribution.json'))
 Assert-True ($d[0] -eq 0xEF -and $d[1] -eq 0xBB -and $d[2] -eq 0xBF) 'distribution.json keeps its BOM state'
+Remove-Item $layout -Recurse -Force
+
+Write-Host "Test 2b: security link and case-insensitive URLs"
+$layout = New-Layout
+$assets = Join-Path $layout '_internal\assets'
+$mixed = 'a https://github.com/bABrendonDavis/kaBluey/blob/main/SECURITY.md b https://GitHub.com/BABRENDONDAVIS/KABLUEY/issues c https://github.com/babrendondavis/kabluey. d https://github.com/bABrendonDavis/kaBluey-time-tracker/x'
+[System.IO.File]::WriteAllText((Join-Path $assets 'kabluey_help.html'), $mixed)
+[System.IO.File]::WriteAllText((Join-Path $layout 'NOTICES.txt'), 'n')
+[System.IO.File]::WriteAllText((Join-Path $assets 'distribution.json'), '{}')
+Invoke-SupportLinkRepoint -Layout $layout | Out-Null
+$m = (Read-TextFileRaw (Join-Path $assets 'kabluey_help.html')).Text
+Assert-True ($m -eq "a $($script:PublicSupportUrl) b $($script:PublicSupportUrl) c $($script:PublicRepoUrl). d $($script:PublicRepoUrl)/x") 'SECURITY.md link -> issues; mixed-case URLs re-pointed; public URL untouched'
 Remove-Item $layout -Recurse -Force
 
 Write-Host "Test 3: failure modes"
